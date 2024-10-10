@@ -1,8 +1,13 @@
 #include <stdio.h>
+#include <time.h>
 
 #define N 3
 #define M 3
 
+void displayRuntime(clock_t start, clock_t end) {
+    double time_taken = ((double)(end - start)) / CLOCKS_PER_SEC; 
+    printf("Runtime: %f seconds\n", time_taken*1000);
+}
 void rowSumCalculation(int matrix[N][M]) {
     for (int i = 0; i < N; i++) {
         int sum = 0;
@@ -60,6 +65,8 @@ void displayMatrix(int matrix[N][M]) {
 }
 
 int main() {
+    clock_t start, end;
+    start = clock();
     int matrix1[N][M], matrix2[N][M], result[N][M];
 
     printf("Enter elements of matrix1:\n");
@@ -96,6 +103,10 @@ int main() {
     matrixMultiplication(matrix1, matrix2, result);
     printf("Multiplication Result:\n");
     displayMatrix(result);
+    
+    end = clock();
+    displayRuntime(start, end);
 
     return 0;
 }
+
