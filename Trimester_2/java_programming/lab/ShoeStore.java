@@ -19,7 +19,7 @@ public class ShoeStore {
         this.name = name;
         this.numShoes = numShoes;
         this.totalRevenue = totalRevenue;
-        this.numEmployees = 0;
+        this.numEmployees = 10;
         this.hasOnlineStore = false;
     }
 
