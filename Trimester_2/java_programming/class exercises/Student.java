@@ -1,34 +1,25 @@
-public class Student{
-    String name;
-    int grade;
+public class Student {
+    private String name;
+    public int grade;
 
-    public Student(String name, int grade){
+    public Student(String name, int grade) {
         this.name = name;
         this.grade = grade;
     }
 
-    public void displayDetails(){
-        System.out.println("Name: " + name);
-        System.out.println();
+    public void displayDetails() {
+        System.out.println("Student's name: " + name);
     }
 
-    public void displayGrade(){
-        System.out.println("Grade: " + grade);
-        System.out.println();   
+    private void displayGrade() {
+        System.out.println("Student's grade: " + grade);
     }
 
-    public static void main(String[] args){
-        Student student1 = new Student("John", 12);
-        student1.displayDetails();
-        student1.displayGrade();
+    public static void main(String[] args) {
+        Student student = new Student("John", 90);
 
-        Student student2 = new Student("Jane", 11);
-        student2.displayDetails();
-        student2.displayGrade();
+        System.out.println("Student's name (accessed directly): " + student.name);
 
+        student.displayDetails();
     }
-    Student student3 = new Student("Mike", 10);
-    System.out.println("Name: " + student3.name);
-    System.out.println("Grade: " + student3.grade);
-    student3.displayDetails();
 }
