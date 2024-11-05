@@ -78,5 +78,7 @@ public class ShoeStore {
 
         myShoeStore.addShoes(50, 100.0);
         myShoeStore.displayInfo();
+
+        defaultStore.displayInfo();
     }
 }
