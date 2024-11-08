@@ -11,10 +11,7 @@ public class Student {
         System.out.println("Student's name: " + name);
     }
 
-    private void displayGrade() {
-        System.out.println("Student's grade: " + grade);
-    }
-
+   
     public static void main(String[] args) {
         Student student = new Student("John", 90);
 
