@@ -1,0 +1,23 @@
+Menu:
+1. Add Employee
+2. Display Employees with low performance
+3. Display Employees with high performance
+4. Display Employee with highest performance
+5. Exit
+Enter your choice: 1
+Enter Employee ID: 1
+Enter Employee Name: Anjaney
+Enter Performance Score: 100.0
+Employee added successfully!
+
+Menu:
+1. Add Employee
+2. Display Employees with low performance
+3. Display Employees with high performance
+4. Display Employee with highest performance
+5. Exit
+Enter your choice: 4
+Employee with highest performance:
+Employee ID: 1
+Name: Anjaney
+Performance Score: 100.00
