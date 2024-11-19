@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<ctype.h>
 
 typedef struct Employee {
     int Employee_ID;
@@ -18,11 +19,11 @@ int isEmployeeIdUnique(struct Employee* head, int id) {
     struct Employee* current = head;
     while (current != NULL) {
         if (current->Employee_ID == id) {
-            return 0;  // Not unique
+            return 0;  
         }
         current = current->next;
     }
-    return 1;  // Unique
+    return 1; 
 }
 
 void InsertEnd(struct Employee** head, struct Employee* newEmployee) {
@@ -53,28 +54,43 @@ void DisplayDetails(struct Employee* head) {
     }
 }
 
-void Highestperf(struct Employee* head) {
-    if (head == NULL) {
-        printf("No employees in the list.\n");
-        return;
-    }
-    
-    struct Employee* current = head;
-    struct Employee* highest = head;
-    while (current != NULL) {
-        if (current->Performance_Score > highest->Performance_Score) {
-            highest = current;
+int isNameValid(const char* name) {
+    for (int i = 0; name[i] != '\0'; i++) {
+        if (!isalpha(name[i]) && name[i] != ' ') {
+            return 0;
         }
-        current = current->next;
     }
-    printf("Employee with highest performance:\n");
-    printf("Employee ID: %d\n", highest->Employee_ID);
-    printf("Name: %s\n", highest->name);
-    printf("Performance Score: %.2f\n", highest->Performance_Score);
+    return 1;
+}
+
+int getValidIntegerInput(const char* prompt) {
+    int value;
+    char temp;
+    while (1) {
+        printf("%s", prompt);
+        if (scanf("%d%c", &value, &temp) == 2 && temp == '\n') {
+            return value;
+        }
+        printf("Invalid input! Please enter an integer value.\n");
+        clearInputBuffer();
+    }
+}
+
+float getValidFloatInput(const char* prompt) {
+    float value;
+    char temp;
+    while (1) {
+        printf("%s", prompt);
+        if (scanf("%f%c", &value, &temp) == 2 && temp == '\n') {
+            return value;
+        }
+        printf("Invalid input! Please enter a numeric value.\n");
+        clearInputBuffer();
+    }
 }
 
 void Split_list(struct Employee* head, struct Employee** lowScoreList, struct Employee** highScoreList) {
-    // Clear existing lists first
+
     while (*lowScoreList != NULL) {
         struct Employee* temp = *lowScoreList;
         *lowScoreList = (*lowScoreList)->next;
@@ -107,16 +123,6 @@ void Split_list(struct Employee* head, struct Employee** lowScoreList, struct Em
     }
 }
 
-void freeList(struct Employee** head) {
-    struct Employee* current = *head;
-    while (current != NULL) {
-        struct Employee* temp = current;
-        current = current->next;
-        free(temp);
-    }
-    *head = NULL;
-}
-
 int main() {
     struct Employee* head = NULL;
     struct Employee* lowScoreList = NULL;
@@ -128,11 +134,15 @@ int main() {
         printf("1. Add Employee\n");
         printf("2. Display Employees with low performance\n");
         printf("3. Display Employees with high performance\n");
-        printf("4. Display Employee with highest performance\n");
-        printf("5. Display All Employees\n");
-        printf("6. Exit\n");
+        printf("4. Display All Employees\n");
+        printf("5. Exit\n");
         printf("Enter your choice: ");
-        scanf("%d", &choice);
+        if (scanf("%d", &choice) != 1) {
+            printf("Invalid input! Please enter a valid choice.\n");
+            clearInputBuffer();
+            choice = 0;
+            continue;
+        }
         clearInputBuffer();
         
         switch (choice) {
@@ -144,34 +154,45 @@ int main() {
                 }
                 
                 int id;
-                printf("Enter Employee ID: ");
-                scanf("%d", &id);
-                clearInputBuffer();
-                
-                if (!isEmployeeIdUnique(head, id)) {
-                    printf("Error: Employee ID already exists!\n");
-                    free(newEmployee);
+                while (1) {
+                    id = getValidIntegerInput("Enter Employee ID: ");
+                    if (id < 0) {
+                        printf("Error: Employee ID cannot be negative!\n");
+                        continue;
+                    }
+                    if (!isEmployeeIdUnique(head, id)) {
+                        printf("Error: Employee ID already exists!\n");
+                        continue;
+                    }
                     break;
                 }
                 newEmployee->Employee_ID = id;
                 
-                printf("Enter Employee Name: ");
-                fgets(newEmployee->name, sizeof(newEmployee->name), stdin);
-                newEmployee->name[strcspn(newEmployee->name, "\n")] = 0;  // Remove trailing newline
-                
-                do {
-                    printf("Enter Performance Score (0-100): ");
-                    scanf("%f", &newEmployee->Performance_Score);
-                    clearInputBuffer();
-                    
-                    if (newEmployee->Performance_Score < 0 || newEmployee->Performance_Score > 100) {
-                        printf("Invalid score! Please enter a score between 0 and 100.\n");
+                while (1) {
+                    printf("Enter Employee Name: ");
+                    fgets(newEmployee->name, sizeof(newEmployee->name), stdin);
+                    newEmployee->name[strcspn(newEmployee->name, "\n")] = 0;
+                    if (!isNameValid(newEmployee->name)) {
+                        printf("Error: Name can only contain alphabetic characters and spaces!\n");
+                        continue;
                     }
-                } while (newEmployee->Performance_Score < 0 || newEmployee->Performance_Score > 100);
+                    break;
+                }
+                
+                float score;
+                while (1) {
+                    score = getValidFloatInput("Enter Performance Score (0-100): ");
+                    if (score < 0 || score > 100) {
+                        printf("Invalid score! Please enter a score between 0 and 100.\n");
+                        continue;
+                    }
+                    break;
+                }
+                newEmployee->Performance_Score = score;
                 
                 newEmployee->next = NULL;
                 InsertEnd(&head, newEmployee);
-                Split_list(head, &lowScoreList, &highScoreList);  // Update split lists
+                Split_list(head, &lowScoreList, &highScoreList);  
                 printf("Employee added successfully!\n");
                 break;
             }
@@ -186,15 +207,11 @@ int main() {
                 break;
             }
             case 4: {
-                Highestperf(head);
-                break;
-            }
-            case 5: {
                 printf("All Employees:\n");
                 DisplayDetails(head);
                 break;
             }
-            case 6: {
+            case 5: {
                 printf("Exiting...\n");
                 break;
             }
@@ -203,12 +220,7 @@ int main() {
                 break;
             }
         }
-    } while (choice != 6);
-    
-    // Free all allocated memory
-    freeList(&head);
-    freeList(&lowScoreList);
-    freeList(&highScoreList);
+    } while (choice != 5);
     
     return 0;
 }
