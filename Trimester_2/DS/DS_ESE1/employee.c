@@ -1,7 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include<ctype.h>
 
 typedef struct Employee {
     int Employee_ID;
@@ -54,39 +53,24 @@ void DisplayDetails(struct Employee* head) {
     }
 }
 
-int isNameValid(const char* name) {
-    for (int i = 0; name[i] != '\0'; i++) {
-        if (!isalpha(name[i]) && name[i] != ' ') {
-            return 0;
-        }
+void Highestperf(struct Employee* head) {
+    if (head == NULL) {
+        printf("No employees in the list.\n");
+        return;
     }
-    return 1;
-}
-
-int getValidIntegerInput(const char* prompt) {
-    int value;
-    char temp;
-    while (1) {
-        printf("%s", prompt);
-        if (scanf("%d%c", &value, &temp) == 2 && temp == '\n') {
-            return value;
+    
+    struct Employee* current = head;
+    struct Employee* highest = head;
+    while (current != NULL) {
+        if (current->Performance_Score > highest->Performance_Score) {
+            highest = current;
         }
-        printf("Invalid input! Please enter an integer value.\n");
-        clearInputBuffer();
+        current = current->next;
     }
-}
-
-float getValidFloatInput(const char* prompt) {
-    float value;
-    char temp;
-    while (1) {
-        printf("%s", prompt);
-        if (scanf("%f%c", &value, &temp) == 2 && temp == '\n') {
-            return value;
-        }
-        printf("Invalid input! Please enter a numeric value.\n");
-        clearInputBuffer();
-    }
+    printf("Employee with highest performance:\n");
+    printf("Employee ID: %d\n", highest->Employee_ID);
+    printf("Name: %s\n", highest->name);
+    printf("Performance Score: %.2f\n", highest->Performance_Score);
 }
 
 void Split_list(struct Employee* head, struct Employee** lowScoreList, struct Employee** highScoreList) {
@@ -134,8 +118,9 @@ int main() {
         printf("1. Add Employee\n");
         printf("2. Display Employees with low performance\n");
         printf("3. Display Employees with high performance\n");
-        printf("4. Display All Employees\n");
-        printf("5. Exit\n");
+        printf("4. Display Employee with highest performance\n");
+        printf("5. Display All Employees\n");
+        printf("6. Exit\n");
         printf("Enter your choice: ");
         if (scanf("%d", &choice) != 1) {
             printf("Invalid input! Please enter a valid choice.\n");
@@ -155,11 +140,17 @@ int main() {
                 
                 int id;
                 while (1) {
-                    id = getValidIntegerInput("Enter Employee ID: ");
+                    printf("Enter Employee ID: ");
+                    if (scanf("%d", &id) != 1) {
+                        printf("Invalid ID! Please enter a numeric value.\n");
+                        clearInputBuffer();
+                        continue;
+                    }
                     if (id < 0) {
                         printf("Error: Employee ID cannot be negative!\n");
                         continue;
                     }
+                    clearInputBuffer();
                     if (!isEmployeeIdUnique(head, id)) {
                         printf("Error: Employee ID already exists!\n");
                         continue;
@@ -168,27 +159,30 @@ int main() {
                 }
                 newEmployee->Employee_ID = id;
                 
-                while (1) {
-                    printf("Enter Employee Name: ");
-                    fgets(newEmployee->name, sizeof(newEmployee->name), stdin);
-                    newEmployee->name[strcspn(newEmployee->name, "\n")] = 0;
-                    if (!isNameValid(newEmployee->name)) {
-                        printf("Error: Name can only contain alphabetic characters and spaces!\n");
-                        continue;
-                    }
+                printf("Enter Employee Name: ");
+                fgets(newEmployee->name, sizeof(newEmployee->name), stdin);
+                newEmployee->name[strcspn(newEmployee->name, "\n")] = 0;  
+                
+                if (strlen(newEmployee->name) == 0) {
+                    printf("Error: Name cannot be empty!\n");
+                    free(newEmployee);
                     break;
                 }
                 
-                float score;
                 while (1) {
-                    score = getValidFloatInput("Enter Performance Score (0-100): ");
-                    if (score < 0 || score > 100) {
+                    printf("Enter Performance Score (0-100): ");
+                    if (scanf("%f", &newEmployee->Performance_Score) != 1) {
+                        printf("Invalid score! Please enter a numeric value.\n");
+                        clearInputBuffer();
+                        continue;
+                    }
+                    if (newEmployee->Performance_Score < 0 || newEmployee->Performance_Score > 100) {
                         printf("Invalid score! Please enter a score between 0 and 100.\n");
                         continue;
                     }
+                    clearInputBuffer();
                     break;
                 }
-                newEmployee->Performance_Score = score;
                 
                 newEmployee->next = NULL;
                 InsertEnd(&head, newEmployee);
@@ -207,11 +201,15 @@ int main() {
                 break;
             }
             case 4: {
+                Highestperf(head);
+                break;
+            }
+            case 5: {
                 printf("All Employees:\n");
                 DisplayDetails(head);
                 break;
             }
-            case 5: {
+            case 6: {
                 printf("Exiting...\n");
                 break;
             }
@@ -220,7 +218,7 @@ int main() {
                 break;
             }
         }
-    } while (choice != 5);
+    } while (choice != 6);
     
     return 0;
 }
