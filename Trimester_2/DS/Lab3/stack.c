@@ -8,7 +8,6 @@
 char stack[MAX];
 int top = -1;
 
-
 void push(char c) {
     if (top == (MAX - 1)) {
         printf("Stack overflow\n");
@@ -17,7 +16,6 @@ void push(char c) {
     stack[++top] = c;
 }
 
-
 char pop() {
     if (top == -1) {
         printf("Stack underflow\n");
@@ -25,7 +23,6 @@ char pop() {
     }
     return stack[top--];
 }
-
 
 int precedence(char c) {
     if (c == '^')
@@ -38,11 +35,9 @@ int precedence(char c) {
         return 0;
 }
 
-
 int isOperator(char c) {
     return (c == '+' || c == '-' || c == '*' || c == '/' || c == '^');
 }
-
 
 void infixToPostfix(char* exp) {
     int i, k = 0;
@@ -71,34 +66,30 @@ void infixToPostfix(char* exp) {
     printf("Postfix expression: %s\n", output);
 }
 
-
-int evaluatePostfix(char* exp) {
-    int stackEval[MAX], topEval = -1, i;
-    for (i = 0; exp[i]; i++) {
-        if (isdigit(exp[i])) {
-            stackEval[++topEval] = exp[i] - '0';
-        } else {
-            int val1 = stackEval[topEval--];
-            int val2 = stackEval[topEval--];
-            switch (exp[i]) {
-                case '+': stackEval[++topEval] = val2 + val1; break;
-                case '-': stackEval[++topEval] = val2 - val1; break;
-                case '*': stackEval[++topEval] = val2 * val1; break;
-                case '/': stackEval[++topEval] = val2 / val1; break;
-            }
-        }
-    }
-    return stackEval[topEval];
-}
-
 int main() {
     char expression[MAX];
+    int choice;
 
-    printf("Enter infix expression: ");
-    scanf("%s", expression);
+    do {
+        printf("\nMenu:\n");
+        printf("1. Convert infix to postfix\n");
+        printf("2. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
 
-    infixToPostfix(expression);
-
+        switch (choice) {
+            case 1:
+                printf("Enter infix expression: ");
+                scanf("%s", expression);
+                infixToPostfix(expression);
+                break;
+            case 2:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice\n");
+        }
+    } while (choice != 2);
 
     return 0;
 }

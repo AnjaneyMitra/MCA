@@ -1,8 +1,6 @@
-package hospital.management;
-
-import hospital.Doctorclass;
-
-public class HospitalManagement extends Doctor {
+public class HospitalManagement extends Doctorclass {
+    private String name = "John Doe";
+    private String department = "Cardiology";
 
     public void accessDoctorDetails() { 
         // Public member - accessible from any package
@@ -16,9 +14,6 @@ public class HospitalManagement extends Doctor {
 
         // Private member - not accessible outside the class
         // System.out.println("Accessing Doctor ID (private): " + doctorId); // This line would cause an error
-
-        // Calling a protected method from superclass
-        displayDepartment(); // This is allowed as `displayDepartment()` is protected
     }
 
     public static void main(String[] args) {

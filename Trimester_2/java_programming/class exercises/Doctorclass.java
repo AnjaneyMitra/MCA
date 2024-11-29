@@ -1,5 +1,3 @@
-package hospitalpackage;
-
 public class Doctorclass {
     public String name = "Dr. John";           // Public - accessible from anywhere
     protected String department = "Cardiology"; // Protected - accessible within the package and subclasses

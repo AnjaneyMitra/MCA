@@ -2,14 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 typedef struct ProductNode {
     int product_id;
     char product_name[50];
     float price;
     struct ProductNode* next;
 } ProductNode;
-
 
 void insertProduct(ProductNode** head, int id, const char* name, float price) {
     ProductNode* newNode = (ProductNode*)malloc(sizeof(ProductNode));
@@ -19,7 +17,6 @@ void insertProduct(ProductNode** head, int id, const char* name, float price) {
     newNode->next = *head;
     *head = newNode;
 }
-
 
 void deleteProduct(ProductNode** head, int id) {
     ProductNode *temp = *head, *prev = NULL;
@@ -42,7 +39,6 @@ void deleteProduct(ProductNode** head, int id) {
     printf("Product with ID %d deleted.\n", id);
 }
 
-
 void searchProduct(ProductNode* head, int id) {
     ProductNode* current = head;
     while (current != NULL) {
@@ -55,7 +51,6 @@ void searchProduct(ProductNode* head, int id) {
     printf("Product with ID %d not found.\n", id);
 }
 
-
 void displayProducts(ProductNode* head) {
     ProductNode* current = head;
     printf("Product List:\n");
@@ -67,14 +62,50 @@ void displayProducts(ProductNode* head) {
 
 int main() {
     ProductNode* head = NULL;
-    insertProduct(&head, 1, "Sneakers", 49.99);
-    insertProduct(&head, 2, "Boots", 89.99);
-    insertProduct(&head, 3, "Sandals", 29.99);
+    int choice, id;
+    char name[50];
+    float price;
 
-    displayProducts(head);
-    searchProduct(head, 2);
-    deleteProduct(&head, 2);
-    displayProducts(head);
+    while (1) {
+        printf("\nMenu:\n");
+        printf("1. Insert a product\n");
+        printf("2. Delete a product\n");
+        printf("3. Search for a product\n");
+        printf("4. Display all products\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter product ID: ");
+                scanf("%d", &id);
+                printf("Enter product name: ");
+                scanf("%s", name);
+                printf("Enter product price: ");
+                scanf("%f", &price);
+                insertProduct(&head, id, name, price);
+                break;
+            case 2:
+                printf("Enter product ID to delete: ");
+                scanf("%d", &id);
+                deleteProduct(&head, id);
+                break;
+            case 3:
+                printf("Enter product ID to search: ");
+                scanf("%d", &id);
+                searchProduct(head, id);
+                break;
+            case 4:
+                displayProducts(head);
+                break;
+            case 5:
+                printf("Exiting...\n");
+                exit(0);
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
 
     return 0;
 }
